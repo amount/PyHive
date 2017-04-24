@@ -14,6 +14,7 @@ from sqlalchemy.sql import compiler
 from sqlalchemy import exc
 from sqlalchemy import types
 from sqlalchemy import util
+# TODO shouldn't use mysql type
 from sqlalchemy.databases import mysql
 from sqlalchemy.engine import default
 import decimal
@@ -220,7 +221,7 @@ class HiveDialect(default.DefaultDialect):
             # Does the table exist?
             regex_fmt = r'TExecuteStatementResp.*SemanticException.*Table not found {}'
             regex = regex_fmt.format(re.escape(full_table))
-            if re.search(regex, e.message):
+            if re.search(regex, e.args[0]):
                 raise exc.NoSuchTableError(full_table)
             else:
                 raise
