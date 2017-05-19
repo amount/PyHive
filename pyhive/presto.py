@@ -186,7 +186,7 @@ class Cursor(common.DBAPICursor):
             assert self._state == self._STATE_FINISHED, "Should be finished if nextUri is None"
             return
 
-        response = requests.delete(self._nextUri)
+        response = requests.delete(self._nextUri, verify=self._verify)
         if response.status_code != requests.codes.no_content:
             fmt = "Unexpected status code after cancel {}\n{}"
             raise OperationalError(fmt.format(response.status_code, response.content))
@@ -208,13 +208,13 @@ class Cursor(common.DBAPICursor):
         if self._nextUri is None:
             assert self._state == self._STATE_FINISHED, "Should be finished if nextUri is None"
             return None
-        response = requests.get(self._nextUri)
+        response = requests.get(self._nextUri, verify=self._verify)
         self._process_response(response)
         return response.json()
 
     def _fetch_more(self):
         """Fetch the next URI and update state"""
-        self._process_response(requests.get(self._nextUri))
+        self._process_response(requests.get(self._nextUri, verify=self._verify))
 
     def _decode_binary(self, rows):
         # As of Presto 0.69, binary data is returned as the varbinary type in base64 format
