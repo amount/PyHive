@@ -60,7 +60,10 @@ class HiveDecimal(HiveStringTypeBase):
     impl = types.DECIMAL
 
     def process_result_value(self, value, dialect):
-        return decimal.Decimal(value)
+        if value is None:
+            return None
+        else:
+            return decimal.Decimal(value)
 
 
 class HiveIdentifierPreparer(compiler.IdentifierPreparer):
@@ -126,7 +129,7 @@ class HiveCompiler(SQLCompiler):
         return 'length{}'.format(self.function_argspec(fn, **kw))
 
 
-if StrictVersion(sqlalchemy.__version__) >= StrictVersion('0.6.0'):
+if StrictVersion(sqlalchemy.__version__) >= StrictVersion('0.7.0'):
     class HiveTypeCompiler(compiler.GenericTypeCompiler):
         def visit_INTEGER(self, type_):
             return 'INT'
@@ -194,6 +197,7 @@ class HiveDialect(default.DefaultDialect):
             'host': url.host,
             'port': url.port or 10000,
             'username': url.username,
+            'password': url.password,
             'database': url.database or 'default',
         }
         kwargs.update(url.query)
@@ -201,7 +205,7 @@ class HiveDialect(default.DefaultDialect):
 
     def get_schema_names(self, connection, **kw):
         # Equivalent to SHOW DATABASES
-        return [row.database_name for row in connection.execute('SHOW SCHEMAS')]
+        return [row[0] for row in connection.execute('SHOW SCHEMAS')]
 
     def get_view_names(self, connection, schema=None, **kw):
         # Hive does not provide functionality to query tableType
