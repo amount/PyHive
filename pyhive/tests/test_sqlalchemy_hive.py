@@ -15,9 +15,7 @@ from sqlalchemy.schema import Table
 import contextlib
 import datetime
 import decimal
-import os
 import sqlalchemy.types
-import sys
 import unittest
 
 _ONE_ROW_COMPLEX_CONTENTS = [
@@ -30,7 +28,7 @@ _ONE_ROW_COMPLEX_CONTENTS = [
     0.25,
     'a string',
     datetime.datetime(1970, 1, 1),
-    '123',
+    b'123',
     '[1,2]',
     '{1:2,3:4}',
     '{"a":1,"b":2}',
@@ -39,7 +37,6 @@ _ONE_ROW_COMPLEX_CONTENTS = [
 ]
 
 
-@unittest.skipIf(sys.version_info.major == 3, 'Hive not yet supported on Python 3')
 class TestSqlAlchemyHive(unittest.TestCase, SqlAlchemyTestCase):
     def create_engine(self):
         return create_engine('hive://localhost:10000/default')
@@ -172,7 +169,7 @@ class TestSqlAlchemyHive(unittest.TestCase, SqlAlchemyTestCase):
         expected = [(1,)]
         self.assertEqual(result, expected)
 
-    @unittest.skipIf(os.environ.get('SQLALCHEMY') == '0.5.8', "not supported on old sqlalchemy")
+    @unittest.skipIf(sqlalchemy.__version__ == '0.5.8', "not supported on old sqlalchemy")
     @with_engine_connection
     def test_insert_values(self, engine, connection):
         table = Table('insert_test', MetaData(bind=engine),
