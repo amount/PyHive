@@ -2,7 +2,7 @@
 
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
-import pyhive
+import avanthive
 import sys
 
 
@@ -23,16 +23,16 @@ with open('README.rst') as readme:
 
 
 setup(
-    name="PyHive",
-    version=pyhive.__version__,
-    download_url='https://github.com/avantcredit/pyhive/tarball/v' + pyhive.__version__,
-    description="Python interface to Hive",
+    name="AvantHive",
+    version=avanthive.__version__,
+    download_url='https://github.com/avantcredit/pyhive/tarball/v' + avanthive.__version__,
+    description="Avant Python interface to Hive",
     long_description=long_description,
     url='https://github.com/avantcredit/PyHive',
     author="Don Albrecht",
     author_email="don.albrecht@avant.com",
     license="Apache License, Version 2.0",
-    packages=['pyhive', 'TCLIService'],
+    packages=['avanthive', 'TCLIService'],
     classifiers=[
         "Intended Audience :: Developers",
         "License :: OSI Approved :: Apache Software License",
@@ -62,8 +62,8 @@ setup(
     },
     entry_points={
         'sqlalchemy.dialects': [
-            'hive = pyhive.sqlalchemy_hive:HiveDialect',
-            'presto = pyhive.sqlalchemy_presto:PrestoDialect',
+            'hive = avanthive.sqlalchemy_hive:HiveDialect',
+            'presto = avanthive.sqlalchemy_presto:PrestoDialect',
         ],
     }
 )

@@ -11,10 +11,10 @@ import contextlib
 import os
 import requests
 
-from pyhive import exc
-from pyhive import presto
-from pyhive.tests.dbapi_test_case import DBAPITestCase
-from pyhive.tests.dbapi_test_case import with_cursor
+from avanthive import exc
+from avanthive import presto
+from avanthive.tests.dbapi_test_case import DBAPITestCase
+from avanthive.tests.dbapi_test_case import with_cursor
 import mock
 import unittest
 

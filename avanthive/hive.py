@@ -10,10 +10,10 @@ from __future__ import unicode_literals
 from TCLIService import TCLIService
 from TCLIService import constants
 from TCLIService import ttypes
-from pyhive import common
-from pyhive.common import DBAPITypeObject
+from avanthive import common
+from avanthive.common import DBAPITypeObject
 # Make all exceptions visible in this module per DB-API
-from pyhive.exc import *  # noqa
+from avanthive.exc import *  # noqa
 from builtins import range
 import contextlib
 from future.utils import iteritems

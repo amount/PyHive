@@ -21,9 +21,9 @@ import thrift_sasl
 from thrift.transport.TTransport import TTransportException
 
 from TCLIService import ttypes
-from pyhive import hive
-from pyhive.tests.dbapi_test_case import DBAPITestCase
-from pyhive.tests.dbapi_test_case import with_cursor
+from avanthive import hive
+from avanthive.tests.dbapi_test_case import DBAPITestCase
+from avanthive.tests.dbapi_test_case import with_cursor
 
 _HOST = 'localhost'
 

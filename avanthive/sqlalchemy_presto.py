@@ -8,8 +8,8 @@ which is released under the MIT license.
 from __future__ import absolute_import
 from __future__ import unicode_literals
 from distutils.version import StrictVersion
-from pyhive import presto
-from pyhive.common import UniversalSet
+from avanthive import presto
+from avanthive.common import UniversalSet
 from sqlalchemy import exc
 from sqlalchemy import types
 from sqlalchemy import util
@@ -192,7 +192,7 @@ class PrestoDialect(default.DefaultDialect):
 
 
 if StrictVersion(sqlalchemy.__version__) < StrictVersion('0.7.0'):
-    from pyhive import sqlalchemy_backports
+    from avanthive import sqlalchemy_backports
 
     def reflecttable(self, connection, table, include_columns=None, exclude_columns=None):
         insp = sqlalchemy_backports.Inspector.from_engine(connection)

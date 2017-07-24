@@ -8,8 +8,8 @@ which is released under the MIT license.
 from __future__ import absolute_import
 from __future__ import unicode_literals
 from distutils.version import StrictVersion
-from pyhive import hive
-from pyhive.common import UniversalSet
+from avanthive import hive
+from avanthive.common import UniversalSet
 from sqlalchemy.sql import compiler
 from sqlalchemy import exc
 from sqlalchemy import types
@@ -24,7 +24,7 @@ import sqlalchemy
 try:
     from sqlalchemy import processors
 except ImportError:
-    from pyhive import sqlalchemy_backports as processors
+    from avanthive import sqlalchemy_backports as processors
 try:
     from sqlalchemy.sql.compiler import SQLCompiler
 except ImportError:
@@ -316,7 +316,7 @@ class HiveDialect(default.DefaultDialect):
         return True
 
 if StrictVersion(sqlalchemy.__version__) < StrictVersion('0.7.0'):
-    from pyhive import sqlalchemy_backports
+    from avanthive import sqlalchemy_backports
 
     def reflecttable(self, connection, table, include_columns=None, exclude_columns=None):
         insp = sqlalchemy_backports.Inspector.from_engine(connection)

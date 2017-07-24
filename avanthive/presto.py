@@ -9,10 +9,10 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 from builtins import object
-from pyhive import common
-from pyhive.common import DBAPITypeObject
+from avanthive import common
+from avanthive.common import DBAPITypeObject
 # Make all exceptions visible in this module per DB-API
-from pyhive.exc import *  # noqa
+from avanthive.exc import *  # noqa
 import base64
 import getpass
 import logging
@@ -78,14 +78,10 @@ class Cursor(common.DBAPICursor):
     visible by other cursors or connections.
     """
 
-<<<<<<< HEAD
     def __init__(self, host, port='8080', username=None, catalog='hive', schema='default',
-                 poll_interval=1, source='pyhive', session_props=None, protocol='http', verify_ssl=True):
-=======
-    def __init__(self, host, port='8080', username=None, catalog='hive',
-                 schema='default', poll_interval=1, source='pyhive', session_props=None,
-                 protocol='http', password=None, requests_session=None, requests_kwargs=None):
->>>>>>> upstream/master
+                 poll_interval=1, source='pyhive', session_props=None, protocol='https', verify_ssl=False,
+                 password=None, requests_session=None, requests_kwargs=None):
+
         """
         :param host: hostname to connect to, e.g. ``presto.example.com``
         :param port: int -- port, defaults to 8080
@@ -117,11 +113,8 @@ class Cursor(common.DBAPICursor):
         self._poll_interval = poll_interval
         self._source = source
         self._session_props = session_props if session_props is not None else {}
-<<<<<<< HEAD
         self._verify = verify_ssl
-=======
 
->>>>>>> upstream/master
         if protocol not in ('http', 'https'):
             raise ValueError("Protocol must be http/https, was {!r}".format(protocol))
         self._protocol = protocol
@@ -131,6 +124,14 @@ class Cursor(common.DBAPICursor):
         if password is not None and requests_kwargs is not None:
             raise ValueError("Cannot use both password and requests_kwargs")
         requests_kwargs = dict(requests_kwargs) if requests_kwargs is not None else {}
+
+        if self._verify:
+            requests_kwargs["verify"] = True
+        elif self._protocol == 'https':
+            requests_kwargs["verify"] = False
+            self._requests_session.verify = False
+            print "don't verify"
+
         for k in ('method', 'url', 'data', 'headers'):
             if k in requests_kwargs:
                 raise ValueError("Cannot override requests argument {}".format(k))
@@ -210,12 +211,15 @@ class Cursor(common.DBAPICursor):
             '{}:{}'.format(self._host, self._port), '/v1/statement', None, None, None))
         _logger.info('%s', sql)
         _logger.debug("Headers: %s", headers)
-<<<<<<< HEAD
-        response = requests.post(url, data=sql.encode('utf-8'), headers=headers, verify=self._verify)
-=======
+
+        print( repr(self._requests_kwargs))
+        #        response = self._requests_session.post(
+        #    url, data=sql.encode('utf-8'), headers=headers, **self._requests_kwargs)
+        self._requests_session.verify = False
+        # print(repr(self._requests_session))
         response = self._requests_session.post(
             url, data=sql.encode('utf-8'), headers=headers, **self._requests_kwargs)
->>>>>>> upstream/master
+
         self._process_response(response)
 
     def cancel(self):
@@ -225,11 +229,12 @@ class Cursor(common.DBAPICursor):
             assert self._state == self._STATE_FINISHED, "Should be finished if nextUri is None"
             return
 
-<<<<<<< HEAD
-        response = requests.delete(self._nextUri, verify=self._verify)
-=======
+        self._requests_session.verify = False
+        print( repr(self._requests_session ))
+        self._requests_session["verify"] = True
+        self._requests_kwargs["verify"] = True
         response = self._requests_session.delete(self._nextUri, **self._requests_kwargs)
->>>>>>> upstream/master
+
         if response.status_code != requests.codes.no_content:
             fmt = "Unexpected status code after cancel {}\n{}"
             raise OperationalError(fmt.format(response.status_code, response.content))
@@ -251,21 +256,16 @@ class Cursor(common.DBAPICursor):
         if self._nextUri is None:
             assert self._state == self._STATE_FINISHED, "Should be finished if nextUri is None"
             return None
-<<<<<<< HEAD
-        response = requests.get(self._nextUri, verify=self._verify)
-=======
+
+
         response = self._requests_session.get(self._nextUri, **self._requests_kwargs)
->>>>>>> upstream/master
         self._process_response(response)
         return response.json()
 
     def _fetch_more(self):
         """Fetch the next URI and update state"""
-<<<<<<< HEAD
-        self._process_response(requests.get(self._nextUri, verify=self._verify))
-=======
+        self._requests_session.verify = False
         self._process_response(self._requests_session.get(self._nextUri, **self._requests_kwargs))
->>>>>>> upstream/master
 
     def _decode_binary(self, rows):
         # As of Presto 0.69, binary data is returned as the varbinary type in base64 format

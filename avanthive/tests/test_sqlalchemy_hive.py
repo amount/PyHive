@@ -2,11 +2,11 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 from builtins import str
 from distutils.version import StrictVersion
-from pyhive.sqlalchemy_hive import HiveDate
-from pyhive.sqlalchemy_hive import HiveDecimal
-from pyhive.sqlalchemy_hive import HiveTimestamp
-from pyhive.tests.sqlalchemy_test_case import SqlAlchemyTestCase
-from pyhive.tests.sqlalchemy_test_case import with_engine_connection
+from avanthive.sqlalchemy_hive import HiveDate
+from avanthive.sqlalchemy_hive import HiveDecimal
+from avanthive.sqlalchemy_hive import HiveTimestamp
+from avanthive.tests.sqlalchemy_test_case import SqlAlchemyTestCase
+from avanthive.tests.sqlalchemy_test_case import with_engine_connection
 from sqlalchemy import types
 from sqlalchemy.engine import create_engine
 from sqlalchemy.schema import Column
