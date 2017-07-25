@@ -6,7 +6,7 @@ from __future__ import unicode_literals
 from builtins import object
 from builtins import range
 from future.utils import with_metaclass
-from pyhive import exc
+from avanthive import exc
 import abc
 import contextlib
 import functools

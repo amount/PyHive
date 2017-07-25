@@ -11,7 +11,7 @@ from builtins import object
 from builtins import range
 from builtins import str
 from past.builtins import basestring
-from pyhive import exc
+from avanthive import exc
 import abc
 import collections
 import time

@@ -2,7 +2,7 @@
 
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
-import pyhive
+import avanthive
 import sys
 
 
@@ -23,16 +23,16 @@ with open('README.rst') as readme:
 
 
 setup(
-    name="PyHive",
-    version=pyhive.__version__,
-    download_url='https://github.com/avantcredit/pyhive/tarball/v' + pyhive.__version__,
-    description="Python interface to Hive",
+    name="AvantHive",
+    version=avanthive.__version__,
+    download_url='https://github.com/avantcredit/pyhive/tarball/v' + avanthive.__version__,
+    description="Avant Python interface to Hive",
     long_description=long_description,
     url='https://github.com/avantcredit/PyHive',
     author="Don Albrecht",
     author_email="don.albrecht@avant.com",
     license="Apache License, Version 2.0",
-    packages=['pyhive', 'TCLIService'],
+    packages=['avanthive', 'TCLIService'],
     classifiers=[
         "Intended Audience :: Developers",
         "License :: OSI Approved :: Apache Software License",
@@ -43,9 +43,9 @@ setup(
         'future',
     ],
     extras_require={
-        "Presto": ['requests>=1.0.0'],
-        "Hive": ['sasl>=0.2.1', 'thrift>=0.10.0', 'thrift_sasl>=0.1.0'],
-        "SQLAlchemy": ['sqlalchemy>=0.5.0'],
+        'presto': ['requests>=1.0.0'],
+        'hive': ['sasl>=0.2.1', 'thrift>=0.10.0', 'thrift_sasl>=0.1.0'],
+        'sqlalchemy': ['sqlalchemy>=0.6.0'],
     },
     tests_require=[
         'mock>=1.0.0',
@@ -53,7 +53,7 @@ setup(
         'pytest-cov',
         'requests>=1.0.0',
         'sasl>=0.2.1',
-        'sqlalchemy>=0.5.0',
+        'sqlalchemy>=0.6.0',
         'thrift>=0.8.0',
     ],
     cmdclass={'test': PyTest},
@@ -61,15 +61,9 @@ setup(
         '': ['*.rst'],
     },
     entry_points={
-        # New versions
         'sqlalchemy.dialects': [
-            'hive = pyhive.sqlalchemy_hive:HiveDialect',
-            'presto = pyhive.sqlalchemy_presto:PrestoDialect',
-        ],
-        # Version 0.5
-        'sqlalchemy.databases': [
-            'hive = pyhive.sqlalchemy_hive:HiveDialect',
-            'presto = pyhive.sqlalchemy_presto:PrestoDialect',
+            'hive = avanthive.sqlalchemy_hive:HiveDialect',
+            'presto = avanthive.sqlalchemy_presto:PrestoDialect',
         ],
     }
 )

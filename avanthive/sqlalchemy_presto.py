@@ -8,8 +8,8 @@ which is released under the MIT license.
 from __future__ import absolute_import
 from __future__ import unicode_literals
 from distutils.version import StrictVersion
-from pyhive import presto
-from pyhive.common import UniversalSet
+from avanthive import presto
+from avanthive.common import UniversalSet
 from sqlalchemy import exc
 from sqlalchemy import types
 from sqlalchemy import util
@@ -79,6 +79,7 @@ class PrestoDialect(default.DefaultDialect):
             'host': url.host,
             'port': url.port or 8080,
             'username': url.username,
+            'password': url.password
         }
         kwargs.update(url.query)
         if len(db_parts) == 1:
@@ -189,10 +190,32 @@ class PrestoDialect(default.DefaultDialect):
         # requests gives back Unicode strings
         return True
 
+
 if StrictVersion(sqlalchemy.__version__) < StrictVersion('0.7.0'):
-    from pyhive import sqlalchemy_backports
+    from avanthive import sqlalchemy_backports
 
     def reflecttable(self, connection, table, include_columns=None, exclude_columns=None):
         insp = sqlalchemy_backports.Inspector.from_engine(connection)
         return insp.reflecttable(table, include_columns, exclude_columns)
     PrestoDialect.reflecttable = reflecttable
+else:
+    class PrestoTypeCompiler(compiler.GenericTypeCompiler):
+        def visit_CLOB(self, type_, **kw):
+            raise ValueError("Presto does not support the CLOB column type.")
+
+        def visit_NCLOB(self, type_, **kw):
+            raise ValueError("Presto does not support the NCLOB column type.")
+
+        def visit_DATETIME(self, type_, **kw):
+            raise ValueError("Presto does not support the DATETIME column type.")
+
+        def visit_FLOAT(self, type_, **kw):
+            return 'DOUBLE'
+
+        def visit_TEXT(self, type_, **kw):
+            if type_.length:
+                return 'VARCHAR({:d})'.format(type_.length)
+            else:
+                return 'VARCHAR'
+
+    PrestoDialect.type_compiler = PrestoTypeCompiler
