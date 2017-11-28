@@ -130,7 +130,6 @@ class Cursor(common.DBAPICursor):
         elif self._protocol == 'https':
             requests_kwargs["verify"] = False
             self._requests_session.verify = False
-            print "don't verify"
 
         for k in ('method', 'url', 'data', 'headers'):
             if k in requests_kwargs:
@@ -212,11 +211,7 @@ class Cursor(common.DBAPICursor):
         _logger.info('%s', sql)
         _logger.debug("Headers: %s", headers)
 
-        #print( repr(self._requests_kwargs))
-        #        response = self._requests_session.post(
-        #    url, data=sql.encode('utf-8'), headers=headers, **self._requests_kwargs)
         self._requests_session.verify = False
-        # print(repr(self._requests_session))
         response = self._requests_session.post(
             url, data=sql.encode('utf-8'), headers=headers, **self._requests_kwargs)
 
@@ -230,7 +225,6 @@ class Cursor(common.DBAPICursor):
             return
 
         self._requests_session.verify = False
-        #print( repr(self._requests_session ))
         self._requests_session["verify"] = True
         self._requests_kwargs["verify"] = True
         response = self._requests_session.delete(self._nextUri, **self._requests_kwargs)
